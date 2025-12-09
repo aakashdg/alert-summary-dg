@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import ReactMarkdown from 'react-markdown'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://aakashdg-alert-summary-fc-backend.hf.space'
 
@@ -176,7 +177,7 @@ export default function Home() {
         {response && (
           <div className="space-y-4">
             
-            {/* Advice Card */}
+            {/* Advice Card with Markdown Rendering */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex items-start justify-between mb-4">
                 <h2 className="text-xl font-bold text-farmer-green">📊 Farmer Advice</h2>
@@ -187,8 +188,27 @@ export default function Home() {
                   📄 Export PDF
                 </button>
               </div>
-              <div className="prose max-w-none">
-                <div className="whitespace-pre-wrap text-gray-800">{response.advice}</div>
+              
+              {/* Markdown Rendered Content */}
+              <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none prose-headings:text-gray-800 prose-p:text-gray-700 prose-strong:text-gray-900 prose-ul:text-gray-700 prose-ol:text-gray-700">
+                <ReactMarkdown
+                  components={{
+                    // Custom styling for markdown elements
+                    h1: ({node, ...props}) => <h1 className="text-2xl font-bold text-farmer-green mt-4 mb-2" {...props} />,
+                    h2: ({node, ...props}) => <h2 className="text-xl font-bold text-farmer-green mt-3 mb-2" {...props} />,
+                    h3: ({node, ...props}) => <h3 className="text-lg font-semibold text-gray-800 mt-2 mb-1" {...props} />,
+                    p: ({node, ...props}) => <p className="text-gray-700 mb-3 leading-relaxed" {...props} />,
+                    ul: ({node, ...props}) => <ul className="list-disc list-inside mb-3 space-y-1" {...props} />,
+                    ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-3 space-y-1" {...props} />,
+                    li: ({node, ...props}) => <li className="text-gray-700" {...props} />,
+                    strong: ({node, ...props}) => <strong className="font-semibold text-gray-900" {...props} />,
+                    em: ({node, ...props}) => <em className="italic text-gray-600" {...props} />,
+                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-farmer-green pl-4 italic text-gray-600 my-3" {...props} />,
+                    code: ({node, ...props}) => <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono text-gray-800" {...props} />,
+                  }}
+                >
+                  {response.advice}
+                </ReactMarkdown>
               </div>
             </div>
 
